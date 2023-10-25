@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Region;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use function MongoDB\BSON\toJSON;
 
 class RegionController extends Controller
 {
@@ -33,7 +34,7 @@ class RegionController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255'
         ]);
 
         if ($validator->fails()) {
