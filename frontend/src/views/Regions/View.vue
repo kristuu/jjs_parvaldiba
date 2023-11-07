@@ -3,8 +3,8 @@
     <div class="card">
       <div class="card-header">
         <h4>
-          Regions
-          <RouterLink to="/regions/create" class="btn btn-primary float-end">Pievienot reģionu</RouterLink>
+          Lietotāji
+          <RouterLink to="/regions/create" class="btn btn-primary float-end">Pievienot lietotāju</RouterLink>
         </h4>
       </div>
       <div class="card-body">
@@ -12,21 +12,25 @@
           <thead>
             <tr class="fw-bold">
               <th>ID</th>
-              <th>REĢIONA NOSAUKUMS</th>
-              <th>IZVEIDOTS</th>
-              <th>DARBĪBAS</th>
+              <th>VĀRDS</th>
+              <th>UZVĀRDS</th>
+              <th>DZIMŠANAS DATI</th>
+              <th>E-PASTS</th>
+              <th>PAROLE</th>
+              <th>TEL. NR.</th>
+              <th>BANKAS KONTA NR.</th>
             </tr>
           </thead>
-          <tbody v-if="this.regions.length > 0">
-            <tr v-for="(region, index) in this.regions" :key="index">
-              <td>{{ region.id }}</td>
-              <td>{{ region.name }}</td>
-              <td>{{ region.created_at }}</td>
+          <tbody v-if="this.users.length > 0">
+            <tr v-for="(user, index) in this.users" :key="index">
+              <td>{{ user.id }}</td>
+              <td>{{ user.name }}</td>
+              <td>{{ user.created_at }}</td>
               <td>
-                <RouterLink :to="{ path: '/region/'+ region.id +'/edit' }" class="btn btn-success">
+                <RouterLink :to="{ path: '/user/'+ user.id +'/edit' }" class="btn btn-success">
                   Rediģēt
                 </RouterLink>
-                <button type="button" @click="deleteRegion(region.id)" class="btn btn-danger float-end">
+                <button type="button" @click="deleteUser(user.id)" class="btn btn-danger float-end">
                   Dzēst
                 </button>
               </td>
@@ -47,31 +51,31 @@
 import axios from 'axios'
 
 export default {
-  name: 'regions',
+  name: 'userView',
   data() {
     return {
-      regions: []
+      users: []
     }
   },
   mounted() {
-    this.getRegions()
+    this.getUsers()
 
     // console.log('es esmu seit')
   },
   methods: {
-    getRegions() {
-      axios.get('http://localhost:8000/api/regions').then(response => {
-        this.regions = response.data.message
-        // console.log(this.regions)
+    getUsers() {
+      axios.get('http://localhost:8000/api/users').then(response => {
+        this.users = response.data.message
+        // console.log(this.users)
       })
     },
-    deleteRegion(regionID) {
+    deleteUser(userID) {
       if (confirm('Vai esat pārliecināts, ka vēlaties dzēst šos datus?')) {
-        axios.delete(`http://localhost:8000/api/region/${regionID}/delete`)
+        axios.delete(`http://localhost:8000/api/region/${userID}/delete`)
             .then(response => {
               alert(response.data.message)
 
-              this.getRegions()
+              this.getUsers()
             })
             .catch(function(error) {
               if (error.response) {

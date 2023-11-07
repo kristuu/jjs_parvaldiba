@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import RegionView from '../views/Regions/View.vue'
-import RegionCreate from '../views/Regions/Create.vue'
-import RegionEdit from '../views/Regions/Edit.vue'
+import UserView from '../views/Regions/View.vue'
+import UserCreate from '../views/Regions/Create.vue'
+import UserEdit from '../views/Regions/Edit.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -21,19 +21,19 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue')
     },
     {
-      path: '/regions',
-      name: 'regions',
-      component: RegionView
+      path: '/users',
+      name: 'users',
+      component: UserView
     },
     {
-      path: '/regions/create',
-      name: 'regionCreate',
-      component: RegionCreate
+      path: '/users/create',
+      name: 'userCreate',
+      component: UserCreate
     },
     {
-      path: '/region/:id/edit',
-      name: 'regionEdit',
-      component: RegionEdit
+      path: '/user/:id/edit',
+      name: 'userEdit',
+      component: UserEdit
     }
   ]
 })

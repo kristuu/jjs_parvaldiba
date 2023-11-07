@@ -3,7 +3,7 @@
   <div class="container mt-5">
     <div class="card">
       <div class="card-header">
-        <h4>Pievienot reģionu</h4>
+        <h4>Pievienot lietotāju</h4>
       </div>
       <div class="card-body">
 
@@ -14,11 +14,15 @@
         </ul>
 
         <div class="mb-3">
-          <label for="">Reģiona nosaukums</label>
-          <input type="text" v-model="model.region.name" class="form-control" />
+          <label for="">Vārds</label>
+          <input type="text" v-model="model.user.name" class="form-control" />
         </div>
         <div class="mb-3">
-          <button type="button" @click="saveRegion" class="btn btn-primary">Saglabāt</button>
+          <label for="">Uzvārds</label>
+          <input type="text" v-model="model.user.surname" class="form-control" />
+        </div>
+        <div class="mb-3">
+          <button type="button" @click="saveUser" class="btn btn-primary">Saglabāt</button>
         </div>
       </div>
     </div>
@@ -30,13 +34,19 @@
 import axios from 'axios'
 
 export default {
-  name: 'regionCreate',
+  name: 'userCreate',
   data() {
     return {
       errorList: '',
       model: {
-        region: {
-          name: ''
+        user: {
+          name: '',
+          surname: '',
+          birthdate: '',
+          email: '',
+          password: '',
+          phone: '',
+          iban: ''
         }
       }
     }
@@ -46,7 +56,7 @@ export default {
 
       let mythis = this;
 
-      axios.post('http://localhost:8000/api/regions', this.model.region)
+      axios.post('http://localhost:8000/api/users', this.model.user)
           .then(response => {
             console.log(response)
             alert(response.data.message)
