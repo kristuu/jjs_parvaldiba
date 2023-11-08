@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('email', 255)->unique();
             $table->string('password', 255);
             $table->integer('phone');
-            $table->string('iban_number', 64);
+            $table->string('iban', 64);
             $table->rememberToken();
             $table->timestamps();
         });

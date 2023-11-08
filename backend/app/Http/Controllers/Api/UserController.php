@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use function MongoDB\BSON\toJSON;
 
-class RegionController extends Controller
+class UserController extends Controller
 {
     public function index()
     {
@@ -39,7 +39,7 @@ class RegionController extends Controller
             'birthdate' => 'required|date',
             'email' => 'required|email',
             'password' => 'required|string|max:255',
-            'phone' => 'required|integer|max:8',
+            'phone' => 'required|integer|min_digits:8|max_digits:8',
             'iban' => 'required|string|max:64'
         ]);
 
@@ -121,7 +121,7 @@ class RegionController extends Controller
             'birthdate' => 'required|date',
             'email' => 'required|email',
             'password' => 'required|string|max:255',
-            'phone' => 'required|integer|max:8',
+            'phone' => 'required|integer|min_digits:8|max_digits:8',
             'iban' => 'required|string|max:64'
         ]);
 

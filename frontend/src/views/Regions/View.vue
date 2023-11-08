@@ -4,7 +4,7 @@
       <div class="card-header">
         <h4>
           Lietotāji
-          <RouterLink to="/regions/create" class="btn btn-primary float-end">Pievienot lietotāju</RouterLink>
+          <RouterLink to="/users/create" class="btn btn-primary float-end">Pievienot lietotāju</RouterLink>
         </h4>
       </div>
       <div class="card-body">
@@ -25,7 +25,12 @@
             <tr v-for="(user, index) in this.users" :key="index">
               <td>{{ user.id }}</td>
               <td>{{ user.name }}</td>
-              <td>{{ user.created_at }}</td>
+              <td>{{ user.surname }}</td>
+              <td>{{ user.birthdate }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.password }}</td>
+              <td>{{ user.phone }}</td>
+              <td>{{ user.iban }}</td>
               <td>
                 <RouterLink :to="{ path: '/user/'+ user.id +'/edit' }" class="btn btn-success">
                   Rediģēt
@@ -66,7 +71,7 @@ export default {
     getUsers() {
       axios.get('http://localhost:8000/api/users').then(response => {
         this.users = response.data.message
-        // console.log(this.users)
+        console.log(this.users)
       })
     },
     deleteUser(userID) {

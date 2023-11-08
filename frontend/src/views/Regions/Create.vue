@@ -13,16 +13,34 @@
           </li>
         </ul>
 
-        <div class="mb-3">
-          <label for="">Vārds</label>
-          <input type="text" v-model="model.user.name" class="form-control" />
-        </div>
-        <div class="mb-3">
-          <label for="">Uzvārds</label>
-          <input type="text" v-model="model.user.surname" class="form-control" />
-        </div>
-        <div class="mb-3">
-          <button type="button" @click="saveUser" class="btn btn-primary">Saglabāt</button>
+        <div class="row">
+          <div class="mb-3 col-4">
+            <label for="">Vārds</label>
+            <input type="text" v-model="model.user.name" class="form-control has-validation" />
+          </div>
+          <div class="mb-3 col-4">
+            <label for="">Uzvārds</label>
+            <input type="text" v-model="model.user.surname" class="form-control" />
+          </div>
+          <div class="mb-3 col-4">
+            <label for="">Dzimšanas datums</label>
+            <input type="date" v-model="model.user.birthdate" class="form-control" />
+          </div>
+          <div class="mb-3 col-6">
+            <label for="">E-pasta adrese</label>
+            <input type="email" v-model="model.user.email" class="form-control" />
+          </div>
+          <div class="mb-3 col-6">
+            <label for="">Telefona numurs</label>
+            <input type="email" v-model="model.user.phone" class="form-control" />
+          </div>
+          <div class="mb-3 col-6">
+            <label for="">Bankas konta numurs</label>
+            <input type="email" v-model="model.user.iban" class="form-control" />
+          </div>
+          <div class="mb-3 col-6">
+            <button type="button" @click="saveUser" class="btn btn-success h-100 w-100">Saglabāt</button>
+          </div>
         </div>
       </div>
     </div>
@@ -52,7 +70,7 @@ export default {
     }
   },
   methods: {
-    saveRegion() {
+    saveUser() {
 
       let mythis = this;
 

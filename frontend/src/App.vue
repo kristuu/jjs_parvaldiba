@@ -23,7 +23,7 @@ import HelloWorld from './components/HelloWorld.vue'
                 <RouterLink class="nav-link" to="/about">Par mums</RouterLink>
               </li>
               <li class="nav-item">
-                <RouterLink class="nav-link" to="/regions">Reģioni</RouterLink>
+                <RouterLink class="nav-link" to="/users">Lietotāji</RouterLink>
               </li>
             </ul>
           </div>

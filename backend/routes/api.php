@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\RegionController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,9 +19,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('regions', [RegionController::class, 'index']);
-Route::post('regions', [RegionController::class, 'store']);
-Route::get('region/{id}', [RegionController::class, 'findByID']);
-Route::get('region/{id}/edit', [RegionController::class, 'edit']);
-Route::put('region/{id}/edit', [RegionController::class, 'update']);
-Route::delete('region/{id}/delete', [RegionController::class, 'delete']);
+Route::get('users', [UserController::class, 'index']);
+Route::post('users', [UserController::class, 'store']);
+Route::get('user/{id}', [UserController::class, 'findByID']);
+Route::get('user/{id}/edit', [UserController::class, 'edit']);
+Route::put('user/{id}/edit', [UserController::class, 'update']);
+Route::delete('user/{id}/delete', [UserController::class, 'delete']);
