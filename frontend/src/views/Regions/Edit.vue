@@ -3,7 +3,7 @@
   <div class="container mt-5">
     <div class="card">
       <div class="card-header">
-        <h4>Rediģēt reģionu</h4>
+        <h4>Rediģēt lietotāju</h4>
       </div>
       <div class="card-body">
 
@@ -13,12 +13,42 @@
           </li>
         </ul>
 
-        <div class="mb-3">
-          <label for="">Reģiona nosaukums</label>
-          <input type="text" v-model="model.region.name" class="form-control" />
+        <div class="row">
+          <div class="mb-3 col-4">
+            <label for="">Vārds</label>
+            <input type="text" v-model="model.user.name" class="form-control has-validation" />
+          </div>
+          <div class="mb-3 col-4">
+            <label for="">Uzvārds</label>
+            <input type="text" v-model="model.user.surname" class="form-control" />
+          </div>
+          <div class="mb-3 col-4">
+            <label for="">Personas kods</label>
+            <input type="text" v-model="model.user.person_code" class="form-control" />
+          </div>
+          <div class="mb-3 col-4">
+            <label for="">Dzimšanas datums</label>
+            <input type="date" v-model="model.user.birthdate" class="form-control" />
+          </div>
+          <div class="mb-3 col-4">
+            <label for="">E-pasta adrese</label>
+            <input type="email" v-model="model.user.email" class="form-control" />
+          </div>
+          <div class="mb-3 col-4">
+            <label for="">Telefona numurs</label>
+            <input type="email" v-model="model.user.phone" class="form-control" />
+          </div>
+          <div class="mb-3 col-4">
+            <label for="">Bankas konta numurs</label>
+            <input type="email" v-model="model.user.iban_code" class="form-control" />
+          </div>
+          <div class="mb-3 col-4">
+            <label for="">Adreses kods</label>
+            <input type="email" v-model="model.user.googleplaces_address_code" class="form-control" />
+          </div>
         </div>
         <div class="mb-3">
-          <button type="button" @click="updateRegion" class="btn btn-primary">Saglabāt</button>
+          <button type="button" @click="updateUser" class="btn btn-primary">Saglabāt</button>
         </div>
       </div>
     </div>
@@ -30,28 +60,34 @@
 import axios from 'axios'
 
 export default {
-  name: 'regionEdit',
+  name: 'userEdit',
   data() {
     return {
-      regionID: '',
       errorList: '',
       model: {
-        region: {
-          name: ''
+        user: {
+          person_code: '',
+          name: '',
+          surname: '',
+          birthdate: '',
+          email: '',
+          phone: '',
+          googleplaces_address_code: '',
+          iban_code: ''
         }
       }
     }
   },
   mounted() {
     // console.log(this.$route.params.id)
-    this.regionID = this.$route.params.id
-    this.getRegionData(this.$route.params.id)
+    this.person_code = this.$route.params.id
+    this.getUserData(this.$route.params.id)
   },
   methods: {
-    getRegionData(regionID) {
-      axios.get(`http://localhost:8000/api/region/${regionID}/edit`)
+    getUserData(userPersonCode) {
+      axios.get(`http://localhost:8000/api/user/${userPersonCode}/edit`)
           .then(response => {
-            this.model.region = response.data.message
+            this.model.user = response.data.message
           })
           .catch(function(error) {
             if (error.response) {
@@ -63,11 +99,11 @@ export default {
           })
     },
 
-    updateRegion() {
+    updateUser() {
 
       let mythis = this;
 
-      axios.put(`http://localhost:8000/api/region/${this.regionID}/edit`, this.model.region)
+      axios.put(`http://localhost:8000/api/user/${this.person_code}/edit`, this.model.user)
           .then(response => {
             console.log(response)
             alert(response.data.message)

@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 
+use App\Http\Requests\UserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use function MongoDB\BSON\toJSON;
 
@@ -31,55 +33,41 @@ class UserController extends Controller
 
     }
 
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:50',
-            'surname' => 'required|string|max:50',
-            'birthdate' => 'required|date',
-            'email' => 'required|email',
-            'password' => 'required|string|max:255',
-            'phone' => 'required|integer|min_digits:8|max_digits:8',
-            'iban' => 'required|string|max:64'
+        // Retrieve the validated input data...
+        $validated = $request->validated();
+
+        $password = time().rand();
+
+        $user = User::create([
+            'person_code' => $validated['person_code'],
+            'name' => $validated['name'],
+            'surname' => $validated['surname'],
+            'birthdate' => $validated['birthdate'],
+            'email' => $validated['email'],
+            'password' => bcrypt($password),
+            'phone' => $validated['phone'],
+            'googleplaces_address_code' => $request->googleplaces_address_code,
+            'iban_code' => $validated['iban_code']
         ]);
 
-        if ($validator->fails()) {
-
+        if ($user) {
             return response()->json([
-                'status' => 422,
-                'message' => $validator->messages()
-            ], 422);
+                'status' => 200,
+                'message' => 'User created successfully'
+            ], 200);
         } else {
-
-            $user = User::create([
-                'name' => $request->name,
-                'surname' => $request->surname,
-                'birthdate' => $request->birthdate,
-                'email' => $request->email,
-                'password' => $request->password,
-                'phone' => $request->phone,
-                'iban_number' => $request->iban
-            ]);
-
-            if ($user) {
-
-                return response()->json([
-                    'status' => 200,
-                    'message' => 'User created succesfully'
-                ], 200);
-            } else {
-
-                return response()->json([
-                    'status' => 500,
-                    'message' => 'User creation failed'
-                ], 500);
-            }
+            return response()->json([
+                'status' => 500,
+                'message' => 'User creation failed'
+            ], 500);
         }
     }
 
-    public function findByID(int $id)
+    public function findByID(string $person_code)
     {
-        $user = User::find($id);
+        $user = User::find($person_code);
         if ($user) {
 
             return response()->json([
@@ -90,14 +78,14 @@ class UserController extends Controller
 
             return response()->json([
                 'status' => 404,
-                'message' => 'No user with such id found'
+                'message' => 'No user with such person code found'
             ], 404);
         }
     }
 
-    public function edit(int $id)
+    public function edit(?string $person_code)
     {
-        $user = User::find($id);
+        $user = User::where('person_code', $person_code)->first();
         if ($user) {
 
             return response()->json([
@@ -113,63 +101,48 @@ class UserController extends Controller
         }
     }
 
-    public function update(Request $request, int $id)
+    public function update(UserRequest $request, string $person_code)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:50',
-            'surname' => 'required|string|max:50',
-            'birthdate' => 'required|date',
-            'email' => 'required|email',
-            'password' => 'required|string|max:255',
-            'phone' => 'required|integer|min_digits:8|max_digits:8',
-            'iban' => 'required|string|max:64'
-        ]);
+        // Retrieve the validated input data...
+        $validated = $request->validated();
 
-        if ($validator->fails()) {
+        $user = User::find($person_code);
+
+        if ($user) {
+            $user->update([
+                'person_code' => $validated['person_code'],
+                'name' => $validated['name'],
+                'surname' => $validated['surname'],
+                'birthdate' => $validated['birthdate'],
+                'email' => $validated['email'],
+                'phone' => $validated['phone'],
+                'googleplaces_address_code' => $request->googleplaces_address_code,
+                'iban_code' => $validated['iban_code']
+            ]);
 
             return response()->json([
-                'status' => 422,
-                'message' => $validator->messages()
-            ], 422);
+                'status' => 200,
+                'message' => 'User updated succesfully'
+            ], 200);
         } else {
 
-            $user = User::find($id);
-
-            if ($user) {
-                $user->update([
-                    'name' => $request->name,
-                    'surname' => $request->surname,
-                    'birthdate' => $request->birthdate,
-                    'email' => $request->email,
-                    'password' => $request->password,
-                    'phone' => $request->phone,
-                    'iban_number' => $request->iban
-                ]);
-
-                return response()->json([
-                    'status' => 200,
-                    'message' => 'User updated succesfully'
-                ], 200);
-            } else {
-
-                return response()->json([
-                    'status' => 404,
-                    'message' => 'No such user found'
-                ], 404);
-            }
+            return response()->json([
+                'status' => 404,
+                'message' => 'No such user found'
+            ], 404);
         }
     }
 
-    public function delete($id)
+    public function delete(string $person_code)
     {
-        $user = User::find($id);
+        $user = User::find($person_code);
 
         if ($user) {
             $user->delete();
 
             return response()->json([
                 'status' => 200,
-                'message' => 'User with id ' . $id . ' deleted succesfully'
+                'message' => 'User with person code ' . $person_code . ' deleted succesfully'
             ]);
         } else {
 
