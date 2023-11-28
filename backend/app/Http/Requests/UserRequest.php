@@ -14,22 +14,27 @@ class UserRequest extends FormRequest
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
-    public function rules(): array
+    public function rules()
     {
-        return [
+        $rules = [
             'person_code' => ['required', 'string', 'min:11', 'max:11'],
             'name' => ['required', 'string', 'max:60'],
             'surname' => ['required', 'string', 'max:60'],
             'birthdate' => ['required', 'date'],
-            'email' => ['required', 'email', 'unique:users'],
-//            'password' => 'required|string|max:255',
             'phone' => ['required', 'integer', 'min_digits:8', 'max_digits:8'],
             'iban_code' => ['required', 'string', 'max:64']
         ];
+
+        if ($this->method() == 'PUT') {
+            $rules['email'] = [
+                'required',
+                'email'
+            ];
+        } else {
+            $rules['email'] = ['required', 'email', 'unique:users'];
+        }
+
+        return $rules;
     }
+
 }

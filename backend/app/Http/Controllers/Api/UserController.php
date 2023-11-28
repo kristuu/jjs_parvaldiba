@@ -4,15 +4,57 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 
+use Session;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use function MongoDB\BSON\toJSON;
 
 class UserController extends Controller
 {
+
+    public function login(UserRequest $request)
+    {
+        $credentials = [
+          'email' => $request->email,
+          'password' => $request->password
+        ];
+
+        if (Auth::attempt($credentials)) {
+            $status = 200;
+            $message = 'Autorizācija notikusi veiksmīgi';
+        } else {
+            $status = 401;
+            $message = 'Autorizācija neveiksmīga';
+        }
+
+        return response()->json([
+            'status' => $status,
+            'message' => $message
+        ], $status);
+
+    }
+
+    public function logout()
+    {
+        try {
+            Session:flush();
+            $status = 200;
+            $message = 'Sesija beidzēta';
+        } catch (\Illuminate\Database\QueryException $ex) {
+            $status = 404;
+            $message = 'Neizdevās beidzēt sesiju';
+        }
+
+        return response()->json([
+            'status' => $status,
+            'message' => $message
+        ], $status);
+    }
+
     public function index()
     {
         $users = User::all();
