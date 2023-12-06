@@ -3,7 +3,7 @@
   <div class="container mt-5">
     <div class="card">
       <div class="card-header">
-        <h4>Pievienot lietotāju</h4>
+        <h4>Rediģēt lietotāju</h4>
       </div>
       <div class="card-body">
 
@@ -46,9 +46,9 @@
             <label for="">Adreses kods</label>
             <input type="email" v-model="model.user.googleplaces_address_code" class="form-control" />
           </div>
-          <div class="mb-3 col-4">
-            <button type="button" @click="saveUser" class="btn btn-success h-100 w-100">Saglabāt</button>
-          </div>
+        </div>
+        <div class="mb-3">
+          <button type="button" @click="updateUser" class="btn btn-primary">Saglabāt</button>
         </div>
       </div>
     </div>
@@ -60,7 +60,7 @@
 import axios from 'axios'
 
 export default {
-  name: 'userCreate',
+  name: 'userEdit',
   data() {
     return {
       errorList: '',
@@ -78,27 +78,36 @@ export default {
       }
     }
   },
+  mounted() {
+    // console.log(this.$route.params.id)
+    this.person_code = this.$route.params.id
+    this.getUserData(this.$route.params.id)
+  },
   methods: {
-    saveUser() {
+    getUserData(userPersonCode) {
+      axios.get(`http://localhost:8000/api/user/${userPersonCode}/edit`)
+          .then(response => {
+            this.model.user = response.data.message
+          })
+          .catch(function(error) {
+            if (error.response) {
+
+              if (error.response.status === 404) {
+                alert(error.response.data.message)
+              }
+            }
+          })
+    },
+
+    updateUser() {
 
       let mythis = this;
 
-      console.log(this.model.user)
-      axios.post('http://localhost:8000/api/users', this.model.user)
+      axios.put(`http://localhost:8000/api/user/${this.person_code}/edit`, this.model.user)
           .then(response => {
             console.log(response)
             alert(response.data.message)
 
-            this.model.user = {
-              person_code: '',
-              name: '',
-              surname: '',
-              birthdate: '',
-              email: '',
-              phone: '',
-              googleplaces_address_code: '',
-              iban_code: ''
-            }
             this.errorList = ''
           })
           .catch(function(error) {
@@ -106,7 +115,9 @@ export default {
 
               if (error.response.status === 422) {
                 mythis.errorList = error.response.data.errors
-                console.log(mythis.errorList)
+              }
+              if (error.response.status === 404) {
+                alert(error.response.data.message)
               }
 
               // console.log(error.response.data);

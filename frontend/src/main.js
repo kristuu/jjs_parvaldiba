@@ -1,11 +1,15 @@
-import './assets/main.css'
+import './assets/main.css';
 
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from './router'
+import { createApp } from 'vue';
+import App from './App.vue';
+import axios from 'axios';
+import router from './router';
+import Auth from '@/services/Auth.js';
 
-const app = createApp(App)
+const app = createApp(App);
 
-app.use(router)
+app.config.globalProperties.$axios = axios;
+app.config.globalProperties.$auth = Auth;
 
-app.mount('#app')
+app.use(router);
+app.mount('#app');

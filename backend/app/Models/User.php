@@ -4,24 +4,21 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+//use Laravel\Sanctum\HasApiTokens;
+use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
     protected $table = 'users';
-
-
     protected $primaryKey = 'person_code';
     public $incrementing = false;
+    protected $keyType = 'string';
 
     /**
      * The attributes that are mass assignable.
@@ -59,4 +56,22 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function permissionLevels() : BelongsToMany
+    {
+        return $this->belongsToMany(Permission_Level::class,
+        'users_permission_levels',
+        'user_person_code',
+        'permission_level_id');
+    }
+
+    public function instructor() : HasMany
+    {
+        return $this->hasMany(Instructor::class, 'user_person_code', 'person_code');
+    }
+
+    public function reservations() : HasMany
+    {
+        return $this->hasMany(Reservation::class, 'user_person_code', 'person_code');
+    }
 }

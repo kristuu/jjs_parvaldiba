@@ -18,9 +18,9 @@ return new class extends Migration
             $table->date('birthdate');
             $table->string('email', 255)->unique();
             $table->string('password', 255);
-            $table->integer('phone');
-            $table->string('googleplaces_address_code');
-            $table->string('iban_code', 64);
+            $table->string('phone', 32)->nullable();
+            $table->string('googleplaces_address_code', 255)->nullable();
+            $table->string('iban_code', 255)->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

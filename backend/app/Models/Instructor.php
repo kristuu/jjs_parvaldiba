@@ -3,14 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Instructor extends Model
 {
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
+
     protected $table = 'instructors';
 
     /**
@@ -25,13 +24,6 @@ class Instructor extends Model
     ];
 
     /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
-    protected $hidden = [];
-
-    /**
      * The attributes that should be cast to native types.
      *
      * @var array
@@ -43,14 +35,24 @@ class Instructor extends Model
     /**
      * Get the user that is the instructor.
      */
-    public function user()
+    public function user() : BelongsTo
     {
         return $this->belongsTo(User::class, 'user_person_code', 'person_code');
     }
 
-    public function certificate()
+    public function certificate() : BelongsTo
     {
         return $this->belongsTo(Certificate::class);
+    }
+
+    public function availability() : HasMany
+    {
+        return $this->hasMany(instructors_availability::class);
+    }
+
+    public function reservations() : HasMany
+    {
+        return $this->hasMany(Reservation::class);
     }
 
 }

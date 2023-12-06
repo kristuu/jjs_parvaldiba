@@ -21,8 +21,8 @@ class UserRequest extends FormRequest
             'name' => ['required', 'string', 'max:60'],
             'surname' => ['required', 'string', 'max:60'],
             'birthdate' => ['required', 'date'],
-            'phone' => ['required', 'integer', 'min_digits:8', 'max_digits:8'],
-            'iban_code' => ['required', 'string', 'max:64']
+            'phone' => ['integer', 'min_digits:8', 'max_digits:8'],
+            'iban_code' => ['string', 'max:64']
         ];
 
         if ($this->method() == 'PUT') {
@@ -32,6 +32,10 @@ class UserRequest extends FormRequest
             ];
         } else {
             $rules['email'] = ['required', 'email', 'unique:users'];
+        }
+
+        if ($this->has('password')) {
+            $rules['password'] = 'required|confirmed|min:8';
         }
 
         return $rules;
